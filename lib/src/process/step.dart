@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -35,7 +35,7 @@ abstract class Step {
    *  Create log of the work done
    */
   Future<WorkLog> logWork(String message, {Map<String, Object> workLog:const {}}) async {
-    logger.debug(message);
+    logger.d(message);
     return new WorkLog(this, loggedWork:workLog);
   }
 
@@ -46,7 +46,7 @@ abstract class Step {
     if(message == null) {
       message = "sucessfully compensated step ${this.runtimeType.toString()}";
     }
-    logger.debug(message);
+    logger.d(message);
     return true;
   }
 
@@ -57,11 +57,11 @@ abstract class Step {
     if(message == null) {
       message = "failed compensating step ${this.runtimeType.toString()}";
     }
-    logger.warn(message);
+    logger.w(message);
     return false;
   }
 
-  Logger get logger => LoggerFactory.getLoggerFor(this.runtimeType);
+  Logger get logger => Logger();
 }
 
 /**

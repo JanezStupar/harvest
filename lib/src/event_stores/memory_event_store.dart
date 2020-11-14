@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -25,7 +25,7 @@ class MemoryEventStore implements EventStore {
 }
 
 class _MemoryEventStream implements EventStream {
-  static final _logger = LoggerFactory.getLoggerFor(MemoryEventStore);
+  static final _logger = Logger();
   final _uncommittedEvents = new List<DomainEvent>();
   final _committedEvents = new List<DomainEvent>();
   int _streamVersion;
@@ -46,7 +46,7 @@ class _MemoryEventStream implements EventStream {
       _streamVersion++;
       event.version = streamVersion;
       _committedEvents.add(event);
-      _logger.debug("saving event ${event.runtimeType} for id ${id}");
+      _logger.d("saving event ${event.runtimeType} for id ${id}");
     });
     clearChanges();
     return numberOfEvents;

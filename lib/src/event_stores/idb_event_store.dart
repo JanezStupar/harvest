@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -7,7 +7,7 @@ part of harvest_idb;
 /**
  * Indexed DB backed event store.
  *
- * Seriazlizes events into JSON and stores them in Indexed DB.
+ * Serializes events into JSON and stores them in Indexed DB.
  */
 class IdbEventStore implements EventStore {
   static final Map<Guid, EventStream> _store = <Guid, EventStream>{};
@@ -70,7 +70,7 @@ class _IdbEventStream implements EventStream {
       _descriptor.version++;
       event.version = streamVersion;
       _descriptor.events.add(event);
-      _logger.debug("saving event ${event.runtimeType} for id ${id} in ${_idbFacade.objectStoreName}");
+      _logger.d("saving event ${event.runtimeType} for id ${id} in ${_idbFacade.objectStoreName}");
     });
     // save events
     await _idbFacade.saveDescriptor(_descriptor);
@@ -114,10 +114,10 @@ class _IdbFacade {
   Future<EventStream> getEventStream(Guid id) async {
     JsonEventStreamDescriptor descriptor = await getDescriptor(id);
     if(descriptor == null) {
-       _logger.debug('creating event stream in ${objectStoreName} for key ${id.hashCode}');
+       _logger.d('creating event stream in ${objectStoreName} for key ${id.hashCode}');
        descriptor = await saveDescriptor(new JsonEventStreamDescriptor.createNew(id));
      } else {
-       _logger.debug('loading event stream from ${objectStoreName} for key ${id.hashCode} ');
+       _logger.d('loading event stream from ${objectStoreName} for key ${id.hashCode} ');
     }
 
     return new _IdbEventStream(this, descriptor);
@@ -175,12 +175,12 @@ class _IdbFactory {
    */
   Future<Database> openDatabase(String databaseName, String objectStoreName, String indexName, int databaseVersion) async {
     if(!IdbFactory.supported) {
-      throw new UnsupportedError("enviroment does not contain support for IndexedDb");
+      throw new UnsupportedError("environment does not contain support for IndexedDb");
     }
     var database = await window.indexedDB.open(databaseName,
           version: databaseVersion,
           onUpgradeNeeded: (VersionChangeEvent e) {
-            Database db = (e.target as Request).result;
+            Database db = (e.target).result;
             var objectStore = db.createObjectStore(objectStoreName, autoIncrement: true);
             objectStore.createIndex(indexName, '$objectStoreName', unique: true);
           });
@@ -188,4 +188,4 @@ class _IdbFactory {
   }
 }
 
-Logger _logger = LoggerFactory.getLoggerFor(IdbEventStore);
+Logger _logger = Logger();

@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -18,7 +18,7 @@ class InventoryCommandHandler {
     _messageBus.stream(RenameItem).listen(_onRenameItem, cancelOnError: true);
   }
 
-  _onCreateItem(CreateItem command) async {
+  void _onCreateItem(covariant CreateItem command) async {
     try {
       _assertUniqueName(command.name, command.itemId);
       var item = new Item.create(command.name, command.itemId);
@@ -32,25 +32,25 @@ class InventoryCommandHandler {
     }
   }
 
-  _onDecreaseInventory(DecreaseInventory command) async {
+  void _onDecreaseInventory(covariant DecreaseInventory command) async {
     var item = await _domainRepository.load(command.itemId);
     item.decreaseInventory(command.count);
     await _domainRepository.saveAndCallback(item, command, command.originalVersion);
   }
 
-  _onIncreaseInventory(IncreaseInventory command) async {
+  void _onIncreaseInventory(covariant IncreaseInventory command) async {
     var item = await _domainRepository.load(command.itemId);
     item.increaseInventory(command.count);
     await _domainRepository.saveAndCallback(item, command, command.originalVersion);
   }
 
-  _onRemoveItem(RemoveItem command) async {
+  void _onRemoveItem(covariant RemoveItem command) async {
     var item = await _domainRepository.load(command.itemId);
     item.remove();
     await _domainRepository.saveAndCallback(item, command, command.originalVersion);
   }
 
-  _onRenameItem(RenameItem command) async {
+ void _onRenameItem(covariant RenameItem command) async {
     try {
       // assert item is already in index before rename
       String orignalName;
@@ -77,7 +77,7 @@ class InventoryCommandHandler {
 
   _assertUniqueName(String name, Guid id) {
     if(_itemNameIndex.containsKey(name) && _itemNameIndex[name] != id) {
-      throw new ArgumentError("item with name ${name} already exists for item ${_itemNameIndex[name]}");
+      throw new EventArgumentError("item with name ${name} already exists for item ${_itemNameIndex[name]}");
     }
   }
 }

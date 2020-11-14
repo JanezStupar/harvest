@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -8,7 +8,7 @@ part of harvest;
  * Create and manage life cycle of long running processes
  */
 class ProcessManager {
-  static final Logger _logger = LoggerFactory.getLoggerFor(ProcessManager);
+  static final Logger _logger = Logger();
 
   final MessageBus _messageBus;
 
@@ -30,11 +30,11 @@ class ProcessManager {
       }
     }
     if(!succeded) {
-      _logger.warn("process failed ${process.completedWork}");
+      _logger.w("process failed ${process.completedWork}");
       var successfullyUndone = await undoProcess(process);
       return !successfullyUndone;
     }
-    _logger.debug("process succeded with work: ${process.completedWork}");
+    _logger.d("process succeded with work: ${process.completedWork}");
     return new Future.value(succeded);
   }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -43,11 +43,11 @@ class MessageBus {
    * Subscriber error handling may impact the number of delivery targets returned as cancelOnError will cause delivery
    * to cease on the first error.
    */
-  Future<Object> publish(Message message) async {
+  Future<Object> publish(Message message) {
     var messageSink = sink(message.runtimeType) as MessageStreamSink;
     var messageCompleter = messageSink.add(message);
-    var result = await messageCompleter.future;
-    return result;
+    Future future = messageCompleter.future;
+    return future;
   }
 
   /**
@@ -455,5 +455,5 @@ class MessageStreamSubscription implements StreamSubscription<Message> {
   bool get isPaused => _wrapped.isPaused;
 
   @override
-  Future asFuture([var futureValue]) => _wrapped.asFuture(futureValue);
+  Future<Message> asFuture<Message>([covariant Message futureValue]) => _wrapped.asFuture(futureValue);
 }

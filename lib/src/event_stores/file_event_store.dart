@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -19,7 +19,7 @@ class FileEventStore implements EventStore {
   /// create [EventStore] in  [_directory] (directory is created if it does not exists)
   FileEventStore.path(this._directory) {
     if(!_directory.existsSync()) {
-      _logger.debug('creating file event store directory ${_directory.path}');
+      _logger.d('creating file event store directory ${_directory.path}');
       _directory.createSync();
     }
   }
@@ -74,7 +74,7 @@ class _FileEventStream implements EventStream {
       _descriptor.version++;
       event.version = streamVersion;
       _descriptor.events.add(event);
-      _logger.debug("saving event ${event.runtimeType} for id ${id} in ${_eventLog}");
+      _logger.d("saving event ${event.runtimeType} for id ${id} in ${_eventLog}");
     });
     // write events to disk
     await _saveEventStream(_descriptor, _eventLog);
@@ -109,12 +109,12 @@ Future<EventStream> _getEventStream(Guid id, Directory directory) async {
   bool exists = await eventLog.exists();
   if(!exists) {
     // create new event stream
-    _logger.debug('creating new event stream in file ${eventLog.path}');
+    _logger.d('creating new event stream in file ${eventLog.path}');
     await eventLog.create();
     await _saveEventStream(descriptor, eventLog);
   } else {
     // load existing event stream
-    _logger.debug('loading existing event stream from file ${eventLog.path}');
+    _logger.d('loading existing event stream from file ${eventLog.path}');
     var jsonString = await eventLog.readAsString();
     descriptor.fromJsonString(jsonString);
   }
@@ -128,4 +128,4 @@ Future<File> _saveEventStream(JsonEventStreamDescriptor descriptor, File eventLo
   return eventLog;
 }
 
-Logger _logger = LoggerFactory.getLoggerFor(FileEventStore);
+Logger _logger = Logger();

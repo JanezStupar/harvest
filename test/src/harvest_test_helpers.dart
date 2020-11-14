@@ -1,15 +1,16 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
 library harvest_test_helpers;
 
+import 'package:dart_json_mapper/dart_json_mapper.dart' show jsonSerializable;
 import 'package:harvest/harvest.dart';
 import 'package:harvest/harvest_sample.dart';
 import 'package:test/test.dart';
 
-part 'eventstore_tester.dart';
 part 'cqrs_tester.dart';
+part 'eventstore_tester.dart';
 
 /**
  * Helper class that retrieves the entire current view state. Useful for comparing
@@ -48,12 +49,11 @@ class InventoryViewMock implements InventoryView {
     displayedErrors = null;
   }
 
-  set presenter(InventoryPresenter p) {
-  }
+  set presenter(InventoryPresenter p) {}
 
   recordMessage(String messageType, String messageName, DateTime time) {
-     recordedMessages.add(messageName);
-   }
+    recordedMessages.add(messageName);
+  }
 
   showDetails(ItemDetails details) {
     displayedDetails = details;

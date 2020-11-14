@@ -5,6 +5,8 @@
 part of harvest;
 
 /** Message */
+@jsonSerializable
+@Json(typeNameProperty: 'typeName')
 abstract class Message {
   final Map<String, Object> headers = <String, Object>{};
 }

@@ -8,6 +8,8 @@ build
 .pub/
 pubspec.lock
 packages
+.dart_tool/pub/bin/build_runner
+.dart_tool/pub/bin/test
 
 # idea
 *.iml

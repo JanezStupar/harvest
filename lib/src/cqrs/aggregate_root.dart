@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -14,7 +14,7 @@ abstract class AggregateRoot {
       throw new StateError('stream with id ${eventStream.id} does not match $this');
     }
     eventStream.committedEvents.forEach((DomainEvent e) {
-      _logger.debug("loading historic event ${e.runtimeType} for aggregate ${id}");
+      _logger.d("loading historic event ${e.runtimeType} for aggregate ${id}");
       _applyChange(e, false);
     });
   }
@@ -23,7 +23,7 @@ abstract class AggregateRoot {
     this.apply(event);
     _entities.forEach((EventSourcedEntity entity) => entity.apply(event));
     if(isNew) {
-      _logger.debug("applying change ${event.runtimeType} for ${id}");
+      _logger.d("applying change ${event.runtimeType} for ${id}");
       uncommitedChanges.add(event);
     }
   }
@@ -44,7 +44,8 @@ abstract class AggregateRoot {
     entity.applyChange = this.applyChange;
   }
 
-  operator ==(AggregateRoot other) => (other.id == id);
+  @override
+  operator ==(covariant AggregateRoot other) => (other.id == id);
 
   String toString() => "aggregate $id";
 
@@ -55,7 +56,7 @@ abstract class AggregateRoot {
   final uncommitedChanges = new List<DomainEvent>();
 
   final _entities = new List<EventSourcedEntity>();
-  static final _logger = LoggerFactory.getLoggerFor(AggregateRoot);
+  static final _logger = Logger();
 }
 
 /** Function that returns a bare aggregate root for the supplied [aggregateId] */

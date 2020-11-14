@@ -133,8 +133,8 @@ class MessageBusTest {
         var messageBus = getMessageBus();
         int errors = 0;
         // register subscribers that fails
-        messageBus.stream(TestEvent).listen((TestEvent e) => throw "error 1", onError: (_) => errors++);
-        messageBus.stream(TestEvent).listen((TestEvent e) => throw "error 2", onError: (_) => errors++);
+        messageBus.stream(TestEvent).listen((e) => throw "error 1", onError: (_) => errors++);
+        messageBus.stream(TestEvent).listen((e) => throw "error 2", onError: (_) => errors++);
         var result;
         try {
           await messageBus.publish(new TestEvent("message 1"));
@@ -149,10 +149,10 @@ class MessageBusTest {
         var messageBus = getMessageBus();
         int errors = 0;
         // register subscribers that fails first and second time they recieve a message
-        messageBus.stream(TestEvent).listen((TestEvent e) => (errors==0) ? throw "error 1" : null, onError: (e) {
+        messageBus.stream(TestEvent).listen((e) => (errors==0) ? throw "error 1" : null, onError: (e) {
           errors++;
         }, cancelOnError: true);
-        messageBus.stream(TestEvent).listen((TestEvent e) => (errors==1) ? throw "error 2" : null, onError: (e) {
+        messageBus.stream(TestEvent).listen((e) => (errors==1) ? throw "error 2" : null, onError: (e) {
           errors++;
         }, cancelOnError: true);
 
@@ -181,7 +181,7 @@ class MessageBusTest {
 
       test("message call back success", () async {
         var messageBus = getMessageBus();
-        messageBus.stream(TestCommand).listen((TestCommand cmd) {
+        messageBus.stream(TestCommand).listen((dynamic cmd) {
           cmd.succeeded("success");
         });
         var delivered = await messageBus.publish(new TestCommand("command 1"));
@@ -190,7 +190,7 @@ class MessageBusTest {
 
       test("message call back fails", () async {
         var messageBus = getMessageBus();
-        messageBus.stream(TestCommand).listen((TestCommand cmd) {
+        messageBus.stream(TestCommand).listen((dynamic cmd) {
           cmd.failed("failure");
         });
         var result;
@@ -204,10 +204,10 @@ class MessageBusTest {
 
       test("nested message call back fails", () async {
         var messageBus = getMessageBus();
-        messageBus.stream(TestEvent).listen((TestEvent e) {
+        messageBus.stream(TestEvent).listen((dynamic e) {
           throw "nested event failure";
         });
-        messageBus.stream(TestCommand).listen((TestCommand cmd) {
+        messageBus.stream(TestCommand).listen((dynamic cmd) {
           messageBus.publish(new TestEvent("event")).catchError((e) => cmd.failed(e.toString()));
         });
         var result;

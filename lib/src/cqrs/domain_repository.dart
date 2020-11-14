@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -6,7 +6,7 @@ part of harvest;
 
 /** Repository that stores and retrieves domain objects (aggregates) by their events. */
 class DomainRepository<T extends AggregateRoot>  {
-  static final Logger _logger = LoggerFactory.getLoggerFor(DomainRepository);
+  static final Logger _logger = Logger();
   final AggregateBuilder _builder;
   final EventStore _store;
   final MessageBus _messageBus;
@@ -28,7 +28,7 @@ class DomainRepository<T extends AggregateRoot>  {
       var messageFailure = message.headers["messageFailures"] as List;
       if(messageFailure.isNotEmpty) {
         failures.addAll(messageFailure);
-        _logger.error("failed publishing aggregate message $message with failure ${messageFailure}");
+        _logger.e("failed publishing aggregate message $message with failure ${messageFailure}");
       }
     }
     return failures.isEmpty;
@@ -43,7 +43,7 @@ class DomainRepository<T extends AggregateRoot>  {
     }
     var stream = await _store.openStream(id);
     var obj = _builder(id);
-    _logger.debug("loading aggregate ${id} from ${stream.committedEvents.length} total events");
+    _logger.d("loading aggregate ${id} from ${stream.committedEvents.length} total events");
     obj.loadFromHistory(stream);
     return obj;
   }
@@ -69,8 +69,8 @@ class DomainRepository<T extends AggregateRoot>  {
        return [];
       } else {
        var stream = await _store.openStream(aggregate.id);
-       var changes = new List.from(aggregate.uncommitedChanges);
-       _logger.debug("saving aggregate ${aggregate.id} with ${changes.length} new events");
+       List<DomainEvent> changes = new List.from(aggregate.uncommitedChanges);
+       _logger.d("saving aggregate ${aggregate.id} with ${changes.length} new events");
        stream.addAll(changes);
        var savedChanges = await stream.commitChanges();
        if(savedChanges != changes.length) {

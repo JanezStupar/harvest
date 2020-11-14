@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -47,10 +47,25 @@ abstract class EventStream {
 }
 
 /** Optimistic concurrency conflict between multiple writers. */
+@jsonSerializable
+@Json(processAnnotatedMembersOnly: true)
 class ConcurrencyError extends Error {
   ConcurrencyError(this.message);
 
   String toString() => message;
 
+  @jsonProperty
+  final String message;
+}
+
+/** Errors caused by improper event arguments. */
+@jsonSerializable
+@Json(processAnnotatedMembersOnly: true)
+class EventArgumentError extends ArgumentError {
+  EventArgumentError(this.message);
+
+  String toString() => message;
+
+  @jsonProperty
   final String message;
 }

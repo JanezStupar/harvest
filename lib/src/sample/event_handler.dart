@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
@@ -17,12 +17,12 @@ class InventoryEventHandler {
     _messageBus.stream(ItemRemoved).listen(_onItemRemoved);
   }
 
-  _onItemCreated(ItemCreated message) {
+  void _onItemCreated(covariant ItemCreated message) {
     _itemDetailsRepository.save(new ItemDetails(message.id, message.name, 0, 0));
     _itemEntryRepository.save(new ItemEntry(message.id, message.name));
   }
 
-  _onItemRenamed(ItemRenamed message) {
+  void _onItemRenamed(covariant ItemRenamed message) {
     ItemDetails details = _itemDetailsRepository.getById(message.id);
     details.name = message.newName;
     details.version = message.version;
@@ -33,7 +33,7 @@ class InventoryEventHandler {
     _itemEntryRepository.save(entry);
   }
 
-  _onInventoryDecreased(InventoryDecreased message) {
+  void _onInventoryDecreased(covariant InventoryDecreased message) {
     ItemDetails details = _itemDetailsRepository.getById(message.id);
     int newItemCount = details.currentCount - message.count;
     _assertItemCount(newItemCount);
@@ -42,7 +42,7 @@ class InventoryEventHandler {
     _itemDetailsRepository.save(details);
   }
 
-  _onInventoryIncreased(InventoryIncreased message) {
+  void _onInventoryIncreased(covariant InventoryIncreased message) {
     ItemDetails details = _itemDetailsRepository.getById(message.id);
     int newItemCount = details.currentCount + message.count;
     _assertItemCount(newItemCount);
@@ -51,14 +51,14 @@ class InventoryEventHandler {
     _itemDetailsRepository.save(details);
   }
 
-  _onItemRemoved(ItemRemoved message) {
+  void _onItemRemoved(covariant ItemRemoved message) {
     _itemDetailsRepository.removeById(message.id);
     _itemEntryRepository.removeById(message.id);
   }
 
   _assertItemCount(int itemCount) {
     if(itemCount < 0) {
-      throw new ArgumentError("item count cannot be nagative");
+      throw new EventArgumentError("item count cannot be nagative");
     }
   }
 }

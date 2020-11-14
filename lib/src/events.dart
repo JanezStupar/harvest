@@ -1,12 +1,15 @@
-// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS 
+// Copyright (c) 2013, the Harvest project authors. Please see the AUTHORS
 // file for details. All rights reserved. Use of this source code is governed
 // by a Apache license that can be found in the LICENSE file.
 
 part of harvest;
 
 /** Events that can be stored, ususally named in the past tense as they describe a event that has taken place */
-abstract class DomainEvent extends Message {
+@jsonSerializable
+class DomainEvent extends Message {
   int version;
+
+  DomainEvent();
 }
 
 /**
@@ -18,4 +21,4 @@ abstract class DomainEvent extends Message {
  *
  * Since application events are not persisted they are allowed to hold access to complicated objects such as view models
  */
-class ApplicationEvent extends Message { }
+class ApplicationEvent extends Message {}
